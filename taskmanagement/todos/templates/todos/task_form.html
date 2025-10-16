@@ -1,0 +1,43 @@
+{% extends 'todos/base.html' %}
+
+{% block title %}{% if task %}Edit Task{% else %}Create Task{% endif %}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-header">
+        <h2>{% if task %}Edit Task{% else %}Create New Task{% endif %}</h2>
+        <a href="{% url 'task_list' %}" class="btn btn-secondary">← Back to List</a>
+    </div>
+
+    <form method="post" class="task-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="title">Task Title *</label>
+            <input type="text" 
+                   id="title" 
+                   name="title" 
+                   value="{% if task %}{{ task.title }}{% endif %}" 
+                   required
+                   placeholder="Enter task title..."
+                   autofocus>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" 
+                      name="description" 
+                      rows="5"
+                      placeholder="Enter task description...">{% if task %}{{ task.description }}{% endif %}</textarea>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if task %}Update Task{% else %}Create Task{% endif %}
+            </button>
+            <a href="{% url 'task_list' %}" class="btn btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+

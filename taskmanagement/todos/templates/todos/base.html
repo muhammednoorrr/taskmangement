@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Todo List{% endblock %}</title>
+    <link rel="stylesheet" href="/static/todos/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-title">
+                    <h1>📝 Task Management</h1>
+                    <p class="subtitle">Stay organized and get things done</p>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="user-nav">
+                    <span class="user-greeting">Hello, <strong>{{ user.username }}</strong></span>
+                    <a href="{% url 'logout' %}" class="btn btn-logout">Logout</a>
+                </div>
+                {% endif %}
+            </div>
+        </header>
+        
+        {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+                <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Task Management App</p>
+        </footer>
+    </div>
+</body>
+</html>
+
