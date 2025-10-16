@@ -1,48 +1,106 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Todo List{% endblock %}</title>
-    <link rel="stylesheet" href="/static/todos/css/style.css">
+    <title>{% block title %}Task Management{% endblock %}</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'todos/css/style.css' %}">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: #0d6efd;
+            color: #fff;
+            padding-top: 1.5rem;
+        }
+        .sidebar h3 {
+            font-weight: 700;
+            text-align: center;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 12px 20px;
+            border-radius: 6px;
+            transition: 0.2s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: #0b5ed7;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+        }
+        .navbar {
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #777;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="header-content">
-                <div class="header-title">
-                    <h1>📝 Task Management</h1>
-                    <p class="subtitle">Stay organized and get things done</p>
-                </div>
+    <div class="sidebar">
+        <h3>📝 Task Manager</h3>
+        {% if user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{% url 'task_list' %}" class="active" title="View My Tasks">My Tasks</a>
+            <a href="{% url 'task_create' %}" title="Create a New Task">Create Task</a>
+            <a href="{% url 'logout' %}" class="text-danger" title="Logout from Account">Logout</a>
+        </div>
+        {% else %}
+        <div class="mt-4">
+            <a href="{% url 'login' %}" title="Login to your account">Login</a>
+            <a href="{% url 'signup' %}" title="Create a new account">Sign Up</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="main-content">
+        <nav class="navbar navbar-light mb-4">
+            <div class="container-fluid justify-content-end">
                 {% if user.is_authenticated %}
-                <div class="user-nav">
-                    <span class="user-greeting">Hello, <strong>{{ user.username }}</strong></span>
-                    <a href="{% url 'logout' %}" class="btn btn-logout">Logout</a>
-                </div>
+                <span class="me-3">👋 Hello, <strong>{{ user.username }}</strong></span>
                 {% endif %}
             </div>
-        </header>
-        
+        </nav>
+
         {% if messages %}
-        <div class="messages-container">
+        <div class="container mb-3">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                 {{ message }}
-                <button class="alert-close" onclick="this.parentElement.remove()">×</button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close alert"></button>
             </div>
             {% endfor %}
         </div>
         {% endif %}
-        
-        <main>
-            {% block content %}
-            {% endblock %}
-        </main>
+
+        {% block content %}{% endblock %}
         
         <footer>
-            <p>&copy; 2025 Task Management App</p>
+            <p>&copy; 2025 Task Management App. All rights reserved.</p>
         </footer>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

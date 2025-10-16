@@ -1,43 +1,31 @@
 {% extends 'todos/base.html' %}
-
-{% block title %}{% if task %}Edit Task{% else %}Create Task{% endif %}{% endblock %}
+{% block title %}{{ task|default:"Create Task" }}{% endblock %}
 
 {% block content %}
-<div class="form-container">
-    <div class="form-header">
-        <h2>{% if task %}Edit Task{% else %}Create New Task{% endif %}</h2>
-        <a href="{% url 'task_list' %}" class="btn btn-secondary">← Back to List</a>
+<div class="card shadow p-4" style="max-width:700px; margin:auto;">
+  <h3 class="mb-3">{% if task %}Edit Task{% else %}Create Task{% endif %}</h3>
+  <form method="post" aria-label="Task creation and editing form">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input id="title" type="text" name="title" class="form-control" 
+             value="{{ task.title|default_if_none:'' }}" 
+             placeholder="Enter task title" required 
+             title="Enter task title">
     </div>
-
-    <form method="post" class="task-form">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="title">Task Title *</label>
-            <input type="text" 
-                   id="title" 
-                   name="title" 
-                   value="{% if task %}{{ task.title }}{% endif %}" 
-                   required
-                   placeholder="Enter task title..."
-                   autofocus>
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" 
-                      name="description" 
-                      rows="5"
-                      placeholder="Enter task description...">{% if task %}{{ task.description }}{% endif %}</textarea>
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" class="btn btn-primary">
-                {% if task %}Update Task{% else %}Create Task{% endif %}
-            </button>
-            <a href="{% url 'task_list' %}" class="btn btn-cancel">Cancel</a>
-        </div>
-    </form>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea id="description" name="description" class="form-control" rows="4"
+                placeholder="Enter a short task description"
+                title="Task description">{{ task.description|default_if_none:'' }}</textarea>
+    </div>
+    <div class="d-flex justify-content-end">
+      <a href="{% url 'task_list' %}" class="btn btn-secondary me-2" title="Cancel and return to task list">Cancel</a>
+      <button type="submit" class="btn btn-primary" 
+              title="{% if task %}Update this task{% else %}Create a new task{% endif %}">
+        {% if task %}Update{% else %}Create{% endif %}
+      </button>
+    </div>
+  </form>
 </div>
 {% endblock %}
-
