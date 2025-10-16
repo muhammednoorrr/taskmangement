@@ -60,7 +60,7 @@
 </head>
 <body>
     <div class="sidebar">
-        <h3>📝 Task Manager</h3>
+        <h3> Task Manager</h3>
         {% if user.is_authenticated %}
         <div class="mt-4">
             <a href="{% url 'task_list' %}" class="active" title="View My Tasks">My Tasks</a>
@@ -76,13 +76,7 @@
     </div>
 
     <div class="main-content">
-        <nav class="navbar navbar-light mb-4">
-            <div class="container-fluid justify-content-end">
-                {% if user.is_authenticated %}
-                <span class="me-3">👋 Hello, <strong>{{ user.username }}</strong></span>
-                {% endif %}
-            </div>
-        </nav>
+        
 
         {% if messages %}
         <div class="container mb-3">
